@@ -1,82 +1,130 @@
-// Letters to choose from
-
-var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
-
-// computer to choose from the letter avaiable at random
-
-var computerGuess = alphabet[Math.floor(Math.random()* alphabet.length)];
-
-//creating a place to hold scores
-var wins = 0;
-var losses = 0;
-var guesses = 10;
-var guessesLeft = 10;
-var guessedLetters =[];
-var letterToGuess = null;
-
-//function so that the user can have 10 guesses
-
-var updateguessesLeft = function(){
-//grabing the html element Guesses Left and setting it equal to the var guessesLeft. Allowing the number of guesses to be displayed in HTML
-    document.querySelector('#guessLeft').innerHTML = "Guesses left: " + guessesLeft;
-
-};
-
-var updateLetterToGuess = function () {
-    this.letterToGuess = this.alphabet[Math.floor(Math.random() * this.alphabet.length)];
-};
 
 
-var updateGuessesSoFar = function () {
-    // Here we take the guesses the user has tried -- then display it as letters separated by commas. 
-    document.querySelector('#let').innerHTML = "Your Guesses so far: " + guessedLetters.join(', ');
-};
+//letters that could be picked
+var letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",];
 
-// Function will be called when we reset everything
-var reset = function () {
-    totalGuesses = 10;
-    guessesLeft = 10;
-    guessedLetters = [];
+//computer randomly chosen letter
+var computerChoice = letters[Math.floor(Math.random() * letters.length)];
 
-    updateLetterToGuess();
-    updateguessesLeft();
-    updateGuessesSoFar();
-}
-
-updateLetterToGuess();
-updateguessesLeft();
-
-//When key is released it becomes the users guess
+console.log(computerChoice);
 
 
-document.onkeyup = function(event) {
-    guessesLeft--;
-    var userGuess = String.fromCharCode(event.keyCode).toLowerCase();
 
-    guessedLetters.push(userGuess);
-    updateguessesLeft();
-    updateGuessesSoFar();
+// Global Variables 
+var win = 0;
+var lost = 0;
+var wrongChoice = [];
+var letterGuessed;
+var numberOfGuesses = 9;
+var guessesLeft = 9;
+
+// //Dom changes 
+var docnumberOfGuesses = document.getElementById("computerGuess");
+var docguessesLeft = document.getElementById("guessLeft");
+var docWin = document.getElementById("wins");
+var docLost = document.getElementById("losses");
+var docWrongChoice = document.getElementById("let");
 
 
-    if (guessedLetters.indexOf(userGuess) < 0 && alphabet.indexOf(userGuess) >= 0) {
-        guessedLetters[guessedLetters.length] = userGuess;
-        // if it is a new letter then decrease remaining guesses by 1
-        guessesLeft--;
-    }
-
-   if (guessesLeft > 0) {
-    if (userGuess == letterToGuess) {
-            wins++;
-            document.querySelector('#wins').innerHTML = "Wins: " + wins;
-            alert("Yes, you are psychic!");
+// Next, we give JavaScript a function to execute when onkeyup event fires.
+updateUserChoice();
+function updateUserChoice() {
+    document.onkeypress = function (event) { 
+        var userChoice = String.fromCharCode(event.keyCode);
+        if (userChoice === computerChoice) {
+            win++;
+            docWin.textContent = ("Wins: "+ win);
+            alert("You are a psychic!");
             reset();
         }
-    } else if (guessesLeft == 0) {
-        // Then we will loss and we'll update the html to display the loss 
-        losses++;
-       document.querySelector('#losses').innerHTML = "Losses: " + losses;
-        alert("Sorry, you're not psychic, maybe try again?");
-         //Then we'll call the reset. 
-        reset();
-    }
-};
+        else  {
+            guessesLeft--;
+            docguessesLeft.textContent = ("Guesses Reminding: " + guessesLeft);
+            wrongChoice.push(userChoice);
+            docWrongChoice.textContent = ("Wrong Choices: " + wrongChoice);
+        
+        if (guessesLeft <= 0) {
+            lost++;
+            docLost.textContent = ("Lost: " + lost);
+
+            alert("You are NOT a psychic!");
+
+            reset();
+        }
+            console.log(wrongChoice);
+}
+
+function reset() {
+    letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",];
+
+    //computer randomly chosen letter
+    computerChoice = letters[Math.floor(Math.random() * letters.length)];
+    
+    letterGuessed;
+    numberOfGuesses = 9;
+    guessesLeft = 9;
+    docguessesLeft.textContent = ("Guesses Reminding: " + guessesLeft);
+    wrongChoice = [];
+    docWrongChoice.textContent = ("Wrong Choices: " + wrongChoice);
+    console.log(computerChoice)
+    updateUserChoice();
+
+
+}
+}
+       
+}
+
+
+// var UpdateWrongChoice = function(){
+
+// // Here we take the guesses the user has tried -- then display it as letters separated by commas. 
+// document.getElementById('#let').innerHTML = "Your Guesses so far: " + wrongChoice.join(', ');
+// };
+
+//     function UpdateWrongChoice(){
+//         if (userChoice != computerChoice){
+//             docWrongChoice.textContent = wrongChoice; 
+
+//         }
+
+//     }
+
+// // if you guess the letter correctly then the win will increase by 1
+
+//     function win(){
+//         if (userChoice === computerChoice){
+//             win++;
+//             docWin.textContent = win;
+//             alert("You are a psychic!") 
+//         };
+// // if you guess the letter incorrectly then the guessesleft will -- by 1
+//     function lose(){
+//         if (userChoice != computerChoice){
+//             alert("you are not psychic!")
+//             lost--; 
+//             docLost.textContent = lost;
+
+//         };
+//     }
+// }
+
+
+
+//console.log(userText);
+// if (userclick === computerchoice) {
+//     win++;
+
+//     console.log "you are physic");
+//     reset
+// }
+
+// else if ()
+
+
+//     //make it so that a user cannot guess the same letter 2 times and for a user to only be able to guess letters
+
+
+//     reset function() {
+
+//     });
